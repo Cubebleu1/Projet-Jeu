@@ -69,6 +69,7 @@ class game :
     #Cette fonction initie le début du jeu
     def game_begin(self):
         if self.__gameover == True :
+            self.__gui.set_lives(3)
             self.__gameover = False #Le jeu commence, et donc il n'y a plus "gameover"
             self.__enemies = []
             self.__player = joueur(self.__gui, "blue", 470, 620, "player", self.entities) #création d'un joueur
@@ -108,12 +109,10 @@ class game :
         enemies = []
         L = []
         nbLignes = self.__number_of_enemies//self.__enemies_per_line #nombre de lignes
-        print(nbLignes)
         for l in range(nbLignes):
             for k in range(self.__enemies_per_line):
                 #enemy_type = randint(0, 2)
                 enemy_type = choices([0, 1, 2], weights=(40, 40, 20), k=1)[0] #Chaque entier représente un type d'enemi
-                print(enemy_type)
                 L.append([self.__gui,"red",60*(k+1),60*(-l+1), "enemy", enemy_type]) 
         #On sort par ligne le nombre de méchants désirés, L contient les attributs de chaque alien
         target = self.__player
