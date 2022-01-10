@@ -21,6 +21,7 @@ class game :
         self.__gameover = True
         self.__reverse = False
         self.__enemies = []
+        self.__protections = []
         self.__enemies_cara = []
         self.__level = 0
         self.__number_of_enemies = 0
@@ -33,12 +34,13 @@ class game :
     # --- Game Properties --- #
         
     def get_entities(self):
-        return([self.__player, self.__enemies])
+        return([self.__player, self.__enemies, self.__protections])
     def set_entities(self, entities):
-        (self.__player, self.__enemies) = entities   
+        (self.__player, self.__enemies, self.__protections) = entities   
     def del_entities(self):
         del self.__player
         del self.__enemies
+        del self.__protections
     entities = property(get_entities, set_entities, del_entities, 'Entities Property')
            
     def get_game_state(self):
@@ -69,8 +71,9 @@ class game :
         if self.__gameover == True :
             self.__gameover = False #Le jeu commence, et donc il n'y a plus "gameover"
             self.__enemies = []
-            self.__player = joueur(self.__gui, "blue", 470, 620, "player") #création d'un joueur
+            self.__player = joueur(self.__gui, "blue", 470, 620, "player", self.entities) #création d'un joueur
             self.__canevas.bind('<Key>', self.__player.mvmtP) #On bind le canevas au mouvement du vaisseau joueur
+            self.__protections.append(ilot(self.__gui, 10, 800, 575))
             
             #Chaque niveau a un nombre d'ennemis différents, jusqu'a à un boss final
             if self.__level == 0:
@@ -92,13 +95,10 @@ class game :
                 self.__player.enemies = self.entities[1]
                 self.whole_behavioral()
             elif self.__level == 3:
-                self.__enemies.append(final_boss(self.__gui, 'pink', 475, 300, "enemy", self.__player))
+                self.__enemies.append(final_boss(self.__gui, 'pink', 475, 300, "boss", self.__player))
                 self.__enemies[0].final_boss_sprite()
                 self.__player.enemies = self.entities[1]
                 self.__enemies[0].behavior()
-                self.clockmove()
-                self.check_victory()
-                self.check_defeat()
         else :
             return(None)
         
@@ -123,10 +123,10 @@ class game :
                 enemies.append(mechant(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4]))
                 enemies[k].set_sprite("AlienVert.png")
             elif caraAlien[5] == 1:
-                enemies.append(mechantTire(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4], target))
+                enemies.append(mechantTire(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4], target, self.entities))
                 enemies[k].set_sprite("RedAlien.png")
             elif caraAlien[5] == 2:
-                enemies.append(bonusMechant(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4], target))
+                enemies.append(bonusMechant(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4], target, self.entities))
                 enemies[k].set_sprite("BlackAlien.png")
             #canevas.after(100, ligne[k].behavior) 
         return(enemies)
@@ -146,9 +146,13 @@ class game :
         for e in self.__enemies:
             e.is_alive = False
         self.__canevas.delete("projo")
+        self.__canevas.delete("text")
         self.__canevas.delete("player")
+        self.__canevas.delete("boss")
         self.__level = 0
-        self.game_begin()
+        self.__gui.set_score(0)
+        self.__gui.set_lives(3)
+        self.__canevas.after(400, self.game_begin)
         
     def whole_behavioral(self):
         print("behavioral started")
@@ -162,25 +166,29 @@ class game :
     
     #Fonctions qui permet aux enemis de base de se déplacer de manière synchronisée et "retro"
     def clockmove(self):
-        if self.check_limit(): 
-            pass #on vérifie que les enemis ne sont pas en dehors du canevas, si ils le sont, ils changent de sens et sautent une ligne
-        else :
-            #On modifie les coordonnées des enemis pour qu'elles s'accordent au déplacement de leur sprite
-            for m in self.__enemies:
-                (posX, posY) = m.pos
-                if self.__reverse == False:
-                    posX += 10
-                    m.pos = (posX, posY)
-                elif self.__reverse == True:
-                    posX -= 10
-                    m.pos = (posX, posY)
-            #On déplace tous les sprites des enemies de manière synchronisée
-            if not self.__reverse:
-                self.__canevas.move("enemy", 10, 0)
-            elif self.__reverse :
-                self.__canevas.move("enemy", -10, 0)
-        self.__canevas.after(300, self.clockmove)
-        #sans lambda, la fonction clockmove est éxécutée en boucle sans fin et sans temporalisation (le .after n'a aucun effet)
+        if self.__gameover == False:
+            if self.check_limit(): 
+                pass #on vérifie que les enemis ne sont pas en dehors du canevas, si ils le sont, ils changent de sens et sautent une ligne
+            else :
+                #On modifie les coordonnées des enemis pour qu'elles s'accordent au déplacement de leur sprite
+                for m in self.__enemies:
+                    (posX, posY) = m.pos
+                    if self.__reverse == False:
+                        posX += 10
+                        m.pos = (posX, posY)
+                    elif self.__reverse == True:
+                        posX -= 10
+                        m.pos = (posX, posY)
+                #On déplace tous les sprites des enemies de manière synchronisée
+                if not self.__reverse:
+                    self.__canevas.move("enemy", 10, 0)
+                elif self.__reverse :
+                    self.__canevas.move("enemy", -10, 0)
+            self.__canevas.after(200, self.clockmove)
+            #sans lambda, la fonction clockmove est éxécutée en boucle sans fin et sans temporalisation (le .after n'a aucun effet)
+        elif self.__gameover == True : 
+            print("stop")
+            return(None)
         
     #Cette fonction permet aux enemis de sauter une ligne et donc d'avancer vers le joueur
     def jump(self, dir):
@@ -217,6 +225,7 @@ class game :
             victory = self.__canevas.create_text(475,320,fill="yellow",font="Times 40 italic bold", text="Get ready for the next level", tag="text")
             self.__canevas.after(2000, lambda:self.__canevas.delete(victory))
             self.__level += 1
+            self.__gameover = True
             self.__canevas.after(4000, lambda:self.__canevas.delete("text"))
             self.__canevas.after(4500, self.game_begin)
         else :
@@ -234,7 +243,7 @@ class game :
             self.__canevas.delete("text")
             self.__canevas.delete(self.__player.sprite)
             self.__canevas.create_text(475,320,fill="red",font="Times 40 italic bold", text="DEFEAT", tag="text")
-            self.__gameover = True
+            #self.__gameover = True
         else:
             self.__canevas.after(50, self.check_defeat)
             
@@ -243,6 +252,19 @@ class game :
 class GUI:
     def __init__(self, fenetre):
         self.__fenetre = fenetre
+        self.__menu_main = tk.Menu(self.__fenetre)
+        
+        self.__menu_options = tk.Menu(self.__menu_main, tearoff = 0)
+        self.__menu_main.add_cascade(label="Options", menu=self.__menu_options)
+        self.__menu_options.add_command(label = 'Controle', command = self.__fenetre.destroy)
+        self.__menu_options.add_command(label = 'PleinEcran', command = self.__fenetre.destroy)
+
+        self.__menu_game = tk.Menu(self.__menu_main, tearoff = 0)
+        self.__menu_main.add_cascade(label ="Modes de Jeu", menu=self.__menu_game)
+        self.__menu_game.add_command(label = 'Hardcore Mode', command = self.__fenetre.destroy)
+        self.__menu_game.add_command(label = 'Easy Mode', command = self.__fenetre.destroy)
+
+        self.__fenetre.config(menu = self.__menu_main)
         
         self.__background = ImageTk.PhotoImage(file = 'Background.png')
         self.__canevas = tk.Canvas(self.__fenetre, width = 2*470, height = 2*320, bg ='darkblue')
@@ -357,7 +379,7 @@ class vaisseau : ### ON PEUT VIRER COULEUR NON ?###
     
 # --- Classe du vaisseau controllé par le joueur --- # 
 class joueur(vaisseau):
-    def __init__(self,gui,couleur, posX, posY, tag):
+    def __init__(self,gui,couleur, posX, posY, tag, tout):
         super().__init__(gui, couleur, posX, posY, tag)
         self.__couleur="bleu"
         #self.__difficulte=difficulte
@@ -365,6 +387,7 @@ class joueur(vaisseau):
         self.__vitesse=5
         self.__ally = []
         self.__enemies = []
+        self.__entities = tout
     #def pdv(self):
         #if joueur.difficulte == "NM":
             #self.__pv = 3
@@ -429,7 +452,7 @@ class joueur(vaisseau):
                 self.pos = (self.__posX, self.__posY) #On réinjecte les bonnes coordonnées à l'aide du SETTER
                 canevas.move("player", 0, +20)
         if event.keysym == 'space':
-            bullet = projectile(gui, self.__posX, self.__posY, 0, 'green', self, self.__enemies)
+            bullet = projectile(gui, self.__posX, self.__posY, 0, 'green', self, self.__enemies, self.__entities)
             bullet.friendlyroutine()
             if len(self.__ally) != 0:
                 for a in self.__ally:
@@ -454,25 +477,26 @@ class mechant(vaisseau):
 
 #Mechant qui peut tirer et blesser le joueur.      
 class mechantTire(vaisseau):
-    def __init__(self, gui,couleur, posX, posY, tag, player):
+    def __init__(self, gui,couleur, posX, posY, tag, player, tout):
         super().__init__(gui, couleur, posX, posY, tag)
         self.__type = "Shoot"
         self.__img="alienRouge.jpg"
         self.stats = (2, 1, 25)
         #self.__tirer=True
         self.__projectileC = gui.get_canevas()
-        self.__player = player
+        self.__player = tout[0]
+        self.__entities = tout
     def shoot(self):
         if self.is_alive == True :
-            bullet = projectile(self._vaisseau__gui, self._vaisseau__posX, self._vaisseau__posY, 0, 'yellow', self.__player, None)
+            bullet = projectile(self._vaisseau__gui, self._vaisseau__posX, self._vaisseau__posY, 0, 'yellow', self.__player, None, self.__entities)
             bullet.routine()
-            self.__projectileC.after(3000, self.shoot)
+            self.__projectileC.after(randint(2000, 6000), self.shoot)
         else:
             return(None)
     
 
     def behavior(self):
-        self.shoot()
+        self.__projectileC.after(randint(1000, 5000), self.shoot)
     
 #Classe du boss final, très dur a vaincre :(      
 class final_boss(vaisseau):
@@ -512,8 +536,8 @@ class final_boss(vaisseau):
 
 #Classe d'un méchant rapide qui offre un super bonus si vaincu       
 class bonusMechant(mechantTire):
-    def __init__(self, canevas, couleur, posX, posY, tag, player):
-        super().__init__(canevas, couleur, posX, posY, tag, player)
+    def __init__(self, canevas, couleur, posX, posY, tag, player, tout):
+        super().__init__(canevas, couleur, posX, posY, tag, player, tout)
         self.__img="alienViolet.jpg"
         self.stats = (4, 1, 50)
         self.__points=150
@@ -525,22 +549,30 @@ class bonusJeu(vaisseau):
         self.__img="alienBonus.jpg"
         self.__couleur="jaune"
     def meurt(self):
-        return self.__genre
+        return self.__genres
     
     
 #Ilot Protecteurs
-class ilot(vaisseau):
-    def __init__(self,grosseur):
+class ilot:
+    def __init__(self, gui, grosseur, posX, posY):
         self.__img="obstacle2"
         self.__pv=4
+        self.__gui = gui
+        self.__canevas = gui.get_canevas()
         self.__grosseur=grosseur
+        self.__posX = posX
+        self.__posY = posY
+        self.__rectangle = self.__canevas.create_rectangle(self.__posX-50, self.__posY-12, self.__posX+50, self.__posY+12, tags="protec", width ='1', outline ="grey", fill="grey")
+        
+        
+        
         
     
 
  
         
 class projectile :
-    def __init__(self, gui, POSX, POSY, angle, couleur, player, enemies):
+    def __init__(self, gui, POSX, POSY, angle, couleur, player, enemies, tout):
         self.__couleur = couleur 
         self.__angle = angle
         self.__gui = gui
@@ -549,6 +581,7 @@ class projectile :
         self.__enemies = enemies
         self.__posX = POSX
         self.__posY = POSY
+        self.__entities = tout
         self.__rectangle = self.__canevas.create_rectangle(self.__posX-2, self.__posY-5, self.__posX+5, self.__posY+2, tags="projo", width ='1', outline =couleur, fill=couleur)
     
     #Cette fonction régi le comportement d'un projectile hostile
@@ -559,14 +592,12 @@ class projectile :
             #self.__canevas.update()
             if (self.__posY <  self.__player._vaisseau__posY +20 and self.__posY > self.__player._vaisseau__posY - 20) and (self.__posX > self.__player._vaisseau__posX - 20 and self.__posX < self.__player._vaisseau__posX + 20) :
                 #On rentre dans cette boucle quand le projectile entre en contact avec le joueur
-                print('décès')
                 self.__player.stats = (self.__player.stats[0] -1, self.__player.stats[1], self.__player.stats[2])
                 self.__gui.set_lives(self.__player.stats[0]) #Le nombre de vie est mis à jour
                 self.__canevas.delete(self.__rectangle)
-            self.__canevas.after(70, self.routine)   #La fonction s'appelle récursivement                                 
+            self.__canevas.after(30, self.routine)   #La fonction s'appelle récursivement                                 
         else :
             self.__canevas.delete(self.__rectangle)
-            print('OOB')
     
     def get_pos(self):
         return ([self.__posX, self.__posY])
@@ -607,7 +638,6 @@ class projectile :
             self.__canevas.after(30, self.friendlyroutine) 
         else :
             self.__canevas.delete(self.__rectangle)
-            print('OOB')
 
 
 def jeu(game, canevas, mode):
