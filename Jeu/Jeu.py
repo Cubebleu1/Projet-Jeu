@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 13 13:42:18 2021
-
+ 
 @author: arthur.jezequel
 """
 from tkinter import Tk, Frame, Label, Button, Canvas, Entry, Menu, PhotoImage, StringVar
 #import tkinter
 import Fonctions_Jeu as fj
-#from PIL import ImageTk, Image
+#from PIL import ImageTk, Image 
 
  
 

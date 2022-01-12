@@ -16,6 +16,7 @@ Ligne = 0
 Alien = []
 Level = 0
 
+
 class game :
     def __init__(self, gui):
         self.__gameover = True
@@ -69,6 +70,7 @@ class game :
     #Cette fonction initie le début du jeu
     def game_begin(self):
         if self.__gameover == True :
+            self.__canevas.delete('Greetings')
             self.__gui.set_lives(3)
             self.__gameover = False #Le jeu commence, et donc il n'y a plus "gameover"
             self.__enemies = []
@@ -270,6 +272,9 @@ class GUI:
         self.__canevas.create_image(0,0, anchor=tk.NW, image = self.__background)
         self.__canevas.focus_set()
         self.__canevas.pack(padx = 5, pady = 5)
+        
+        self.__greetings = ImageTk.PhotoImage((Image.open("Greetings.png")).resize((750,440), Image.ANTIALIAS))
+        self.__greetings_img = self.__canevas.create_image(450,300, anchor=tk.CENTER, tag="Greetings", image=self.__greetings)
         
         self.__exit_btn = tk.Button(self.__fenetre, text = 'Quitter', command = self.__fenetre.destroy)
         self.__exit_btn.pack(side = 'left', padx = 5, pady = 5)
