@@ -6,16 +6,17 @@ Created on Fri Jan 14 15:08:31 2022
 """
 
 class projectile :
-    def __init__(self, gui, POSX, POSY, angle, couleur, player, enemies, tout):
+    def __init__(self, gui, POSX, POSY, angle, couleur, tout):
         self.__couleur = couleur 
         self.__angle = angle
         self.__gui = gui
         self.__canevas = gui.get_canevas()
-        self.__player = player
-        self.__enemies = enemies
+        
+        self.__player = tout[0]
+        self.__enemies = tout[1]
+        self.__protection = tout[2]
         self.__posX = POSX
         self.__posY = POSY
-        self.__entities = tout
         self.__rectangle = self.__canevas.create_rectangle(self.__posX-2, self.__posY-5, self.__posX+5, self.__posY+2, tags="projo", width ='1', outline =couleur, fill=couleur)
     
     #Cette fonction régi le comportement d'un projectile hostile
@@ -52,23 +53,62 @@ class projectile :
         if self.__posY < 640 and self.__posY > 0: 
             self.__posY -= 20
             self.__canevas.coords(self.__rectangle , self.__posX -5, self.__posY -5, self.__posX +5, self.__posY +5)
-            for t in Alien:
-                (posX, posY) = t.pos
-                if (self.__posY <  posY +20 and self.__posY > posY - 20) and (self.__posX > posX - 20 and self.__posX < posX + 20) :
-                    #self.__canevas.delete(t.get_rectangle())
-                    print('touché :)')
-                    if t.stats[0] == 1: #Si l'ennemi n'avait plus que un point de vie, il meurt
-                        self.__canevas.delete(t.sprite)
-                        t.is_alive = False
-                        Alien.remove(t)
-                        self.__canevas.delete(self.get_rectangle())                        
-                        self.__gui.set_score(self.__gui.get_score() + t.stats[2])
-                        del t
-                    else:  #Si l'ennemi a plus que d'un point de vie, il en pert un mais continue d'exister
-                        self.__canevas.delete(self.get_rectangle())
-                        t.stats = (t.stats[0]-1, t.stats[1], t.stats[2])
-                        print(t.stats)
-                    return(None)  #pour sortir de la fonction et arreter le projectile
+            self.is_enemy_shot()
+            # for t in Alien:
+            #     (posX, posY) = t.pos
+            #     if (self.__posY <  posY +20 and self.__posY > posY - 20) and (self.__posX > posX - 20 and self.__posX < posX + 20) :
+            #         #self.__canevas.delete(t.get_rectangle())
+            #         print('touché :)')
+            #         if t.stats[0] == 1: #Si l'ennemi n'avait plus que un point de vie, il meurt
+            #             self.__canevas.delete(t.sprite)
+            #             t.is_alive = False
+            #             Alien.remove(t)
+            #             self.__canevas.delete(self.get_rectangle())                        
+            #             self.__gui.set_score(self.__gui.get_score() + t.stats[2])
+            #             del t
+            #         else:  #Si l'ennemi a plus que d'un point de vie, il en pert un mais continue d'exister
+            #             self.__canevas.delete(self.get_rectangle())
+            #             t.stats = (t.stats[0]-1, t.stats[1], t.stats[2])
+            #             print(t.stats)
+            #         return(None)  #pour sortir de la fonction et arreter le projectile
+            self.is_projo_shot()
             self.__canevas.after(30, self.friendlyroutine) 
         else :
             self.__canevas.delete(self.__rectangle)
+
+    def is_enemy_shot(self):
+        for t in self.__enemies:
+            (posX, posY) = t.pos
+            if (self.__posY <  posY +20 and self.__posY > posY - 20) and (self.__posX > posX - 20 and self.__posX < posX + 20) :
+                #self.__canevas.delete(t.get_rectangle())
+                print('touché :)')
+                if t.stats[0] == 1: #Si l'ennemi n'avait plus que un point de vie, il meurt
+                    self.__canevas.delete(t.sprite)
+                    t.is_alive = False
+                    self.__enemies.remove(t)
+                    self.__canevas.delete(self.get_rectangle())                        
+                    self.__gui.set_score(self.__gui.get_score() + t.stats[2])
+                    del t
+                else:  #Si l'ennemi a plus que d'un point de vie, il en pert un mais continue d'exister
+                    self.__canevas.delete(self.get_rectangle())
+                    t.stats = (t.stats[0]-1, t.stats[1], t.stats[2])
+                    print(t.stats)
+                return(None)  #pour sortir de la fonction et arreter le projectile
+            
+    def is_projo_shot(self):
+        for t in self.__protection:
+            (posX, posY) = t.pos
+            if (self.__posY <  posY +20 and self.__posY > posY - 20) and (self.__posX > posX - 20 and self.__posX < posX + 20) :
+                #self.__canevas.delete(t.get_rectangle())
+                print('touché :)')
+                if t.stats == 1: #Si l'ennemi n'avait plus que un point de vie, il meurt
+                    self.__canevas.delete(t.sprite)
+                    t.is_alive = False
+                    self.__protection.remove(t)
+                    self.__canevas.delete(self.get_rectangle())                        
+                    del t
+                else:  #Si l'ennemi a plus que d'un point de vie, il en pert un mais continue d'exister
+                    self.__canevas.delete(self.get_rectangle())
+                    t.stats = t.stats-1
+                    print(t.stats)
+                return(None)  #pour sortir de la fonction et arreter le projectile

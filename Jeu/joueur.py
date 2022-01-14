@@ -9,30 +9,23 @@ from projectile import projectile
 
 # --- Classe du vaisseau controllé par le joueur --- # 
 class joueur(vaisseau):
-    def __init__(self,gui,couleur, posX, posY, tag, tout):
+    def __init__(self,gui,couleur, posX, posY, tag, entities):
         super().__init__(gui, couleur, posX, posY, tag)
         self.__couleur="bleu"
         #self.__difficulte=difficulte
+        self.__entities=entities
         self.stats = (3, 1, 0)
         self.__vitesse=5
         self.__ally = []
-        self.__enemies = []
-        self.__entities = tout
-    #def pdv(self):
-        #if joueur.difficulte == "NM":
-            #self.__pv = 3
-        #elif joueur.difficulte == "HCM":
-            #self.__pv = 1
-        #else:
-            #self.__pv = 999
-    
-    def set_enemies(self, new_enemies):
-        self.__enemies = new_enemies
-    def get_enemies(self):
-        return(self.__enemies)
-    def del_enemies(self):
-        del self.__enemies
-    enemies = property(get_enemies, set_enemies, del_enemies, 'Enemy seen from the player Property')
+        self.__enemies = entities[1]
+        
+    def set_entities(self, new_entities):
+        self.__entities = new_entities
+    def get_entities(self):
+        return(self.__entities)
+    def del_entities(self):
+        del self.__entities
+    entities = property(get_entities, set_entities, del_entities, 'Enemy seen from the player Property')
     
     
     def bonus(self,genre):
@@ -43,7 +36,6 @@ class joueur(vaisseau):
            
     def get_ally(self):
         gui = self.get_gui()
-        canevas = gui.get_canevas()
         (posX, posY) = self.pos
         print(self.__ally)
         if len(self.__ally) == 0 and len(self.__ally) != 1 :
@@ -82,10 +74,10 @@ class joueur(vaisseau):
                 self.pos = (self.__posX, self.__posY) #On réinjecte les bonnes coordonnées à l'aide du SETTER
                 canevas.move("player", 0, +20)
         if event.keysym == 'space':
-            bullet = projectile(gui, self.__posX, self.__posY, 0, 'green', self, self.__enemies, self.__entities)
+            bullet = projectile(gui, self.__posX, self.__posY, 0, 'green', self.__entities)
             bullet.friendlyroutine()
             if len(self.__ally) != 0:
                 for a in self.__ally:
                     (posX_ally, posY_ally) = a.pos
-                    ally_bullet = projectile(gui, a.pos[0], a.pos[1], 0, 'Orange', self, self.__enemies)
+                    ally_bullet = projectile(gui, a.pos[0], a.pos[1], 0, 'Orange', self.__entities)
                     ally_bullet.friendlyroutine()

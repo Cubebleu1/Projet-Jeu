@@ -16,3 +16,21 @@ class ilot:
         self.__posX = posX
         self.__posY = posY
         self.__rectangle = self.__canevas.create_rectangle(self.__posX-50, self.__posY-12, self.__posX+50, self.__posY+12, tags="protec", width ='1', outline ="grey", fill="grey")
+        
+
+    def get_stat(self):
+        return(self.__pv)
+    def set_stat(self, pv):
+        self.__pv = pv
+    def del_stat(self):
+        del self.__pv
+    stats = property(get_stat, set_stat, del_stat, 'Stat property')
+    
+    def get_pos(self):
+        return ([self.__posX, self.__posY])
+    def set_pos(self, pos):
+        (self.__posX, self.__posY) = pos       
+    def del_pos(self):
+        del self.__posX
+        del self.__posY
+    pos = property(get_pos, set_pos, del_pos, 'Position Property')

@@ -12,12 +12,13 @@ from projectile import projectile
 
 #Classe du boss final, très dur a vaincre :(      
 class final_boss(vaisseau):
-    def __init__(self, gui, couleur, posX, posY, tag, player):
+    def __init__(self, gui, couleur, posX, posY, tag, entities):
         super().__init__(gui, couleur, posX, posY, tag)
         self.__gui = gui
         self.__canevas = gui.get_canevas()
         self.stats = (40, 2, 5000)
-        self.__player = player
+        self.__entities=entities
+        self.__player = entities[0]
         self.__posX = self.pos[0]
         self.__posY = self.pos[1]
     
@@ -34,9 +35,9 @@ class final_boss(vaisseau):
         
     def super_shoot(self):    
         if self.is_alive == True :
-            bullet1 = projectile(self.__gui, self.__posX -4, self.__posY, 2, 'orange', self.__player, None )
+            bullet1 = projectile(self.__gui, self.__posX -4, self.__posY, 2, 'orange', self.__entities)
             bullet1.routine()
-            bullet2 = projectile(self.__gui, self.__posX - 30, self.__posY, 2, 'orange', self.__player, None )
+            bullet2 = projectile(self.__gui, self.__posX - 30, self.__posY, 2, 'orange', self.__entities )
             bullet2.routine()
             self.__canevas.after(3000, self.super_shoot)
         else:

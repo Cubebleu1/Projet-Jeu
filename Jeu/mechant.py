@@ -2,7 +2,7 @@
 """
 Created on Fri Jan 14 15:08:30 2022
 
-@author: rapha
+@author: rapha et arthu
 """
 from vaisseau import vaisseau
 #Mechant de base, il ne tire pas.

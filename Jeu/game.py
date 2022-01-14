@@ -79,24 +79,24 @@ class game :
                 self.__enemies_per_line = 7
                 self.__number_of_enemies = 21
                 self.__enemies = self.create_enemies()
-                self.__player.enemies = self.entities[1] #Mise à jour des enemis percus par le joueur
+                self.__player.entities = self.entities #Mise à jour des enemis percus par le joueur
                 self.whole_behavioral()
             elif self.__level == 1:
                 self.__enemies_per_line = 10
                 self.__number_of_enemies = 40
                 self.__enemies = self.create_enemies()
-                self.__player.enemies = self.entities[1]
+                self.__player.entities = self.entities
                 self.whole_behavioral()
             elif self.__level == 2:
                 self.__enemies_per_line = 10
                 self.__number_of_enemies = 80
                 self.__enemies = self.create_enemies()
-                self.__player.enemies = self.entities[1]
+                self.__player.entities = self.entities
                 self.whole_behavioral()
             elif self.__level == 3:
-                self.__enemies.append(final_boss(self.__gui, 'pink', 475, 300, "boss", self.__player))
+                self.__enemies.append(final_boss(self.__gui, 'pink', 475, 300, "boss", self.__entities))
                 self.__enemies[0].final_boss_sprite()
-                self.__player.enemies = self.entities[1]
+                self.__player.entities = self.entities[1]
                 self.__enemies[0].behavior()
         else :
             return(None)

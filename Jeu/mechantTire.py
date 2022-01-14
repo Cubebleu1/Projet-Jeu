@@ -2,7 +2,7 @@
 """
 Created on Fri Jan 14 15:08:30 2022
 
-@author: rapha
+@author: rapha et arthu
 """
 from vaisseau import vaisseau
 from random import randint
@@ -20,7 +20,7 @@ class mechantTire(vaisseau):
         self.__entities = tout
     def shoot(self):
         if self.is_alive == True :
-            bullet = projectile(self._vaisseau__gui, self._vaisseau__posX, self._vaisseau__posY, 0, 'yellow', self.__player, None, self.__entities)
+            bullet = projectile(self._vaisseau__gui, self._vaisseau__posX, self._vaisseau__posY, 0, 'yellow', self.__entities)
             bullet.routine()
             self.__projectileC.after(randint(2000, 6000), self.shoot)
         else:
