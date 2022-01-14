@@ -5,9 +5,8 @@ Created on Mon Dec 13 13:42:18 2021
  
 @author: arthur.jezequel
 """
-from tkinter import Tk, Frame, Label, Button, Canvas, Entry, Menu, PhotoImage, StringVar
-#import tkinter
-import Fonctions_Jeu as fj
+from tkinter import Tk
+import gui as guint
 #from PIL import ImageTk, Image 
 
  
@@ -15,7 +14,18 @@ import Fonctions_Jeu as fj
 ma_fenetre = Tk()
 ma_fenetre.title('Space  Invaders')
 
-fj.GUI(ma_fenetre)
+guint.GUI(ma_fenetre)
+
+#from tkinter import Tk, Frame, Label, Button, Canvas, Entry, Menu, PhotoImage, StringVar
+##import tkinter
+#import Fonctions_Jeu as fj
+##from PIL import ImageTk, Image 
+
+ 
+#ma_fenetre = Tk()
+#ma_fenetre.title('Space  Invaders')
+
+#fj.GUI(ma_fenetre)
 
 
 """
