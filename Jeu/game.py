@@ -231,16 +231,19 @@ class game :
             
     #Cette fonction vérifie les conditions de défaite(les pv du joueur sont à 0) tout le long du jeu !
     def check_defeat(self):
-        if self.__player.stats[0] == 0:
-            self.__player.is_alive = False
-            for e in self.__enemies:
-                e.is_alive = False
-            self.__canevas.delete("enemy")
-            self.__canevas.delete("projo")
-            self.__canevas.delete("ally")
-            self.__canevas.delete("text")
-            self.__canevas.delete(self.__player.sprite)
-            self.__canevas.create_text(475,320,fill="red",font="Times 40 italic bold", text="DEFEAT", tag="text")
-            #self.__gameover = True
-        else:
-            self.__canevas.after(50, self.check_defeat)
+        for ennemies in self.__ennemies :
+            if self.__player.stats[0] == 0 or ennemies.posY > 600 or ((ennemies.posY < self.__player.posY + 20 and ennemies.posY > self.__player.posY - 20) and (ennemies.posX > self.__player.posX - 20 and ennemies.posX < self.__player.posX + 20)) :
+                self.__player.is_alive = False
+                for e in self.__enemies:
+                    e.is_alive = False
+                self.__canevas.delete("enemy")
+                self.__canevas.delete("projo")
+                self.__canevas.delete("ally")
+                self.__canevas.delete("text")
+                self.__canevas.delete(self.__player.sprite)
+                self.__canevas.create_text(475,320,fill="red",font="Times 40 italic bold", text="DEFEAT", tag="text")
+                #self.__gameover = True
+                #break (pour pas faire les autres cas jsp si on peut faire autre chose)
+            else:
+                self.__canevas.after(50, self.check_defeat)
+            
