@@ -36,7 +36,7 @@ class vaisseau : ### ON PEUT VIRER COULEUR NON ?###
         #print(self.pos, "vue display")
         #sans lambda, la fonction follow est éxécutée en boucle sans fin et sans temporalisation (le .after n'a aucun effet)
 
-     
+    
     # --- Properties --- #
     def get_pos(self):
         return ([self.__posX, self.__posY])

@@ -4,18 +4,23 @@ Created on Fri Jan 14 15:08:31 2022
 
 @author: rapha
 """
+from collections import deque
+import tkinter as tk
+from PIL import ImageTk, Image
 
 #Ilot Protecteurs
 class ilot:
-    def __init__(self, gui, grosseur, posX, posY):
+    def __init__(self, gui, game, entities, posX, posY):
         self.__img="obstacle2"
-        self.__pv=4
+        self.__pv=100
         self.__gui = gui
+        self.__game = game
         self.__canevas = gui.get_canevas()
-        self.__grosseur=grosseur
+        self.__entities = entities
         self.__posX = posX
         self.__posY = posY
-        self.__rectangle = self.__canevas.create_rectangle(self.__posX-50, self.__posY-12, self.__posX+50, self.__posY+12, tags="protec", width ='1', outline ="grey", fill="grey")
+        self.__sprites = deque(["BlockStone/frame03.png", "BlockStone/frame02.png","BlockStone/frame01.png"])
+        self.__rectangle = self.__canevas.create_rectangle(self.__posX-100, self.__posY-24, self.__posX+100, self.__posY+24, tags="protec", width ='1', outline ="grey", fill="grey")
         
 
     def get_stat(self):
@@ -34,3 +39,15 @@ class ilot:
         del self.__posX
         del self.__posY
     pos = property(get_pos, set_pos, del_pos, 'Position Property')
+    
+    def sprites(self):
+        self.__pv -= 1
+        if self.__pv == 12 or self.__pv==8 or self.__pv==4:
+            new_sprite=self.__sprites.popleft()
+            self.__canevas.delete(self.__rectangle)
+            self.__sprite = ImageTk.PhotoImage((Image.open(new_sprite)).resize((200,48), Image.ANTIALIAS))
+            self.__display = self.__canevas.create_image(self.__posX -100,self.__posY-24, anchor=tk.NW, tag="protec", image=self.__sprite)
+        if self.__pv == 0:
+            self.__canevas.delete(self.__display)
+            self.__entities[2].remove(self)
+        

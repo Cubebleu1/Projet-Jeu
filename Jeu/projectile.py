@@ -30,7 +30,12 @@ class projectile :
                 self.__player.stats = (self.__player.stats[0] -1, self.__player.stats[1], self.__player.stats[2])
                 self.__gui.set_lives(self.__player.stats[0]) #Le nombre de vie est mis à jour
                 self.__canevas.delete(self.__rectangle)
-            self.__canevas.after(30, self.routine)   #La fonction s'appelle récursivement                                 
+            for p in self.__protection:
+                if (self.__posY <  p._ilot__posY +100 and self.__posY > p._ilot__posY - 24) and (self.__posX > p._ilot__posX - 100 and self.__posX < p._ilot__posX + 204) :
+                    p.sprites()   
+                    self.__canevas.delete(self.__rectangle)
+                    return(None)    
+            self.__canevas.after(30, self.routine)   #La fonction s'appelle récursivement                      
         else :
             self.__canevas.delete(self.__rectangle)
     
@@ -48,30 +53,12 @@ class projectile :
     
     #Cette fonction régi le comportement d'un projectile alié
     def friendlyroutine(self):
-        Alien = self.__enemies
-        #print(Alien, 'begin')
+        #Alien = self.__enemies
         if self.__posY < 640 and self.__posY > 0: 
             self.__posY -= 20
             self.__canevas.coords(self.__rectangle , self.__posX -5, self.__posY -5, self.__posX +5, self.__posY +5)
-            self.is_enemy_shot()
-            # for t in Alien:
-            #     (posX, posY) = t.pos
-            #     if (self.__posY <  posY +20 and self.__posY > posY - 20) and (self.__posX > posX - 20 and self.__posX < posX + 20) :
-            #         #self.__canevas.delete(t.get_rectangle())
-            #         print('touché :)')
-            #         if t.stats[0] == 1: #Si l'ennemi n'avait plus que un point de vie, il meurt
-            #             self.__canevas.delete(t.sprite)
-            #             t.is_alive = False
-            #             Alien.remove(t)
-            #             self.__canevas.delete(self.get_rectangle())                        
-            #             self.__gui.set_score(self.__gui.get_score() + t.stats[2])
-            #             del t
-            #         else:  #Si l'ennemi a plus que d'un point de vie, il en pert un mais continue d'exister
-            #             self.__canevas.delete(self.get_rectangle())
-            #             t.stats = (t.stats[0]-1, t.stats[1], t.stats[2])
-            #             print(t.stats)
-            #         return(None)  #pour sortir de la fonction et arreter le projectile
-            self.is_projo_shot()
+            if self.is_enemy_shot() == True:
+                return(None)
             self.__canevas.after(30, self.friendlyroutine) 
         else :
             self.__canevas.delete(self.__rectangle)
@@ -93,7 +80,7 @@ class projectile :
                     self.__canevas.delete(self.get_rectangle())
                     t.stats = (t.stats[0]-1, t.stats[1], t.stats[2])
                     print(t.stats)
-                return(None)  #pour sortir de la fonction et arreter le projectile
+                return(True)  #pour sortir de la fonction et arreter le projectile
             
     def is_projo_shot(self):
         for t in self.__protection:

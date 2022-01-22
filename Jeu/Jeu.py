@@ -12,10 +12,10 @@ import gui as guint
  
 
 ma_fenetre = Tk()
-ma_fenetre.title('Space  Invaders')
+ma_fenetre.title('Space  Invaders') 
 
 guint.GUI(ma_fenetre)
-
+ 
 #from tkinter import Tk, Frame, Label, Button, Canvas, Entry, Menu, PhotoImage, StringVar
 ##import tkinter
 #import Fonctions_Jeu as fj

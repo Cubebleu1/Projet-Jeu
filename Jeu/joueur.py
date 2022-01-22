@@ -17,6 +17,7 @@ class joueur(vaisseau):
         self.stats = (3, 1, 0)
         self.__vitesse=5
         self.__ally = []
+        self.__can_shoot = True
         self.__enemies = entities[1]
         
     def set_entities(self, new_entities):
@@ -35,6 +36,7 @@ class joueur(vaisseau):
            self.__dmg+=1
            
     def get_ally(self):
+        print("ally gain")
         gui = self.get_gui()
         (posX, posY) = self.pos
         print(self.__ally)
@@ -63,21 +65,17 @@ class joueur(vaisseau):
                 self.pos = (self.__posX, self.__posY)
                 canevas.move("player", -20, 0)
                 #canevas.coords(self.__rectangle , self.__posX -20, self.__posY -20, self.__posX +20, self.__posY +20)
-        if event.keysym == 'Up':
-            if self.__posY > 60 :
-                self.__posY -= 20
-                self.pos = (self.__posX, self.__posY)
-                canevas.move("player", 0, -20)
-        if event. keysym == 'Down':
-            if self.__posY < 600:
-                self.__posY += 20
-                self.pos = (self.__posX, self.__posY) #On réinjecte les bonnes coordonnées à l'aide du SETTER
-                canevas.move("player", 0, +20)
         if event.keysym == 'space':
-            bullet = projectile(gui, self.__posX, self.__posY, 0, 'green', self.__entities)
-            bullet.friendlyroutine()
-            if len(self.__ally) != 0:
-                for a in self.__ally:
-                    (posX_ally, posY_ally) = a.pos
-                    ally_bullet = projectile(gui, a.pos[0], a.pos[1], 0, 'Orange', self.__entities)
-                    ally_bullet.friendlyroutine()
+            if self.__can_shoot == True:
+                bullet = projectile(gui, self.__posX, self.__posY, 0, 'green', self.__entities)
+                bullet.friendlyroutine()
+                if len(self.__ally) != 0:
+                    for a in self.__ally:
+                        (posX_ally, posY_ally) = a.pos
+                        ally_bullet = projectile(gui, a.pos[0], a.pos[1], 0, 'Orange', self.__entities)
+                        ally_bullet.friendlyroutine()
+                self.__can_shoot = False
+                canevas.after(500, self.timer)
+            
+    def timer(self):
+        self.__can_shoot = True
