@@ -25,7 +25,7 @@ class final_boss(vaisseau):
     
     def final_boss_sprite(self):
         self.__canevas.delete(self.get_sprite())
-        self.__sprite = ImageTk.PhotoImage((Image.open("BossGalaga.png")).resize((200,200), Image.ANTIALIAS))
+        self.__sprite = ImageTk.PhotoImage((Image.open("images/BossGalaga.png")).resize((200,200), Image.ANTIALIAS))
         self.__display = self.__canevas.create_image(self.__posX -20,self.__posY-20, anchor=tk.CENTER, tag="boss", image=self.__sprite)
 
         

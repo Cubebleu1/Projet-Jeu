@@ -36,12 +36,12 @@ class joueur(vaisseau):
         print(self.__ally)
         if len(self.__ally) == 0 and len(self.__ally) != 1 :
             self.__ally.append(vaisseau(gui, "orange", posX, posY, "ally")) #Rajoute l'alié à l'attribut liste d'allié
-            self.__ally[0].sprite = "Ally_Ship.png"
+            self.__ally[0].sprite = "images/Ally_Ship.png"
             self.__ally[0].follow((-1, self)) #Assure que l'allié suit le joueur
         elif len(self.__ally) == 1 and len(self.__ally) < 2:
             #ally = vaisseau(canevas, "orange", posX +40, posY, "ally")
             self.__ally.append(vaisseau(gui, "orange", posX, posY, "ally")) #Rajoute l'alié à l'attribut liste d'allié
-            self.__ally[1].sprite = "Ally_Ship.png"
+            self.__ally[1].sprite = "images/Ally_Ship.png"
             self.__ally[1].follow((1, self)) #Assure que l'allié suit le joueur
             
     def mvmtP(self,event):
@@ -68,8 +68,8 @@ class joueur(vaisseau):
                         (posX_ally, posY_ally) = a.pos
                         ally_bullet = projectile(gui, a.pos[0], a.pos[1], 0, 'Orange', self.__entities)
                         ally_bullet.friendlyroutine()
-                #self.__can_shoot = False
-                #canevas.after(500, self.timer)
+                self.__can_shoot = False
+                canevas.after(500, self.timer)
             
     def timer(self):
         self.__can_shoot = True

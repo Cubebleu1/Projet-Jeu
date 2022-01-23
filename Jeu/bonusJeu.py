@@ -17,8 +17,6 @@ class bonusJeu(vaisseau):
         self._vaisseau__type="bonus"
         self.__gui = gui
         self.__canevas = self.__gui.get_canevas()
-        self.__sprite = ImageTk.PhotoImage((Image.open("Bonus.png")).resize((40,40), Image.ANTIALIAS))
-        self.__display = self.__canevas.create_image(self._vaisseau__posX -20,self._vaisseau__posY-20, anchor=tk.NW, image=self.__sprite, tag = "bonus")
         
     def move(self):
         #print(self._vaisseau__posX, self.pos)
@@ -36,7 +34,7 @@ class bonusJeu(vaisseau):
     
     def appear(self):
         self._vaisseau__posY = 100
-        self.__sprite = ImageTk.PhotoImage((Image.open("Bonus.png")).resize((40,40), Image.ANTIALIAS))
+        self.__sprite = ImageTk.PhotoImage((Image.open("images/PinkAlien.png")).resize((40,40), Image.ANTIALIAS))
         self.__display = self.__canevas.create_image(self._vaisseau__posX -20,self._vaisseau__posY-20, anchor=tk.NW, image=self.__sprite, tag = "bonus")
         self.move()
         

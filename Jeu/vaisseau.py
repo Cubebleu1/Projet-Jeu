@@ -22,7 +22,7 @@ class vaisseau : ### ON PEUT VIRER COULEUR NON ?###
         self.__posX = posX
         self.__posY = posY
         #self.__rectangle = self.__canevas.create_rectangle(self.__posX-20, self.__posY-20, self.__posX+20, self.__posY+20, tags = self.__tag, width ='1', outline =couleur)
-        self.__sprite = ImageTk.PhotoImage((Image.open("PlayerSpaceShip.png")).resize((40,40), Image.ANTIALIAS))
+        self.__sprite = ImageTk.PhotoImage((Image.open("images/PlayerSpaceShip.png")).resize((40,40), Image.ANTIALIAS))
         self.__display = self.__canevas.create_image(self.__posX -20,self.__posY-20, anchor=tk.NW, image=self.__sprite, tag = self.__tag)
 
     def follow(self, localisation):

@@ -136,13 +136,13 @@ class game :
             caraAlien=L.pop()
             if caraAlien[5] == 0:
                 enemies.append(mechant(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4]))
-                enemies[k].set_sprite("AlienVert.png")
+                enemies[k].set_sprite("images/AlienVert.png")
             elif caraAlien[5] == 1:
                 enemies.append(mechantTire(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4], self.entities))
-                enemies[k].set_sprite("RedAlien.png")
+                enemies[k].set_sprite("images/RedAlien.png")
             elif caraAlien[5] == 2:
                 enemies.append(bonusMechant(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4], self.entities))
-                enemies[k].set_sprite("BlackAlien.png")
+                enemies[k].set_sprite("images/BlackAlien.png")
             #canevas.after(100, ligne[k].behavior)
         return(enemies)
 
@@ -231,12 +231,9 @@ class game :
     
     #Cette fonction vérifie les conditions de victoire (tous les enemis ont été vaincus) tout le long du jeu !
     def check_victory(self):
-        print(self.__boss, self.__enemies)
         if self.__gameover == True :
-            print("gameover")
             return(None)
         elif self.__level == 3:
-            print("niveau3")
             if self.__boss==[] and self.__enemies == []:
                 self.__gameover = True
                 self.__player.is_alive = False 
@@ -275,9 +272,6 @@ class game :
             self.__canevas.delete(self.__player.sprite)
             self.__canevas.delete("ally")
             self.__canevas.create_text(475,320,fill="red",font="Times 40 italic bold", text="DEFEAT", tag="text")
-            #self.__gameover = True
-            #break #(pour pas faire les autres cas jsp si on peut faire autre chose)
-            print('out')
         else:
             self.__canevas.after(200, self.check_defeat)
             
