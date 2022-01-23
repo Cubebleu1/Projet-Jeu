@@ -6,6 +6,10 @@ mais par manque de temps cette fonctionnalité à été perdue.
 
 TO DO LIST :
     - Plus de capacités : faire apparaître des énemis, différents tirs, ect...
+    - Le boss final a sa propre fonction qui lui actualise son sprite, alors qu'on pourrait
+    implémenter dans la fonction setter du sprite de la classe vaisseau la possibilité de mettre en argument
+    la taille du sprite souhaitée... (ca ne devrait pas être trop dur à faire en soi mais le projet est a rendre dans
+    2 heures et j'ai peur de faire une bétise dans la précipitation des dernières minutes)
 
 @author: Raphaël CAUDRON & Arthur JEZEQUEL
 """
@@ -28,12 +32,13 @@ class final_boss(vaisseau):
         self.__posX = self.pos[0]
         self.__posY = self.pos[1]
     
+    #Le sprite du boss a ses propres dimensions, et donc ca propre fonction
     def final_boss_sprite(self):
         self.__canevas.delete(self.get_sprite())
         self.__sprite = ImageTk.PhotoImage((Image.open("images/BossGalaga.png")).resize((200,200), Image.ANTIALIAS))
         self.__display = self.__canevas.create_image(self.__posX -20,self.__posY-20, anchor=tk.CENTER, tag="boss", image=self.__sprite)
 
-        
+    #Le boss peut tirer deux projectiles simultanément ! 
     def super_shoot(self):    
         if self.is_alive == True :
             bullet1 = projectile(self.__gui, self.__posX -4, self.__posY, 2, 'orange', self.__entities)

@@ -26,7 +26,8 @@ class joueur(vaisseau):
         self.__ally = []
         self.__can_shoot = True
         self.__enemies = entities[1]
-        
+       
+    # --- Ces fonctions permettent de récupérer/modifier les attributs de la classe joueur liés aux entités du jeu --- 
     def set_entities(self, new_entities):
         self.__entities = new_entities
     def get_entities(self):
@@ -35,37 +36,40 @@ class joueur(vaisseau):
         del self.__entities
     entities = property(get_entities, set_entities, del_entities, 'Enemy seen from the player Property')
     
-           
+     
+    #Cette fonction permet au joueur d'obtenir un alié s'il a tué le bonus. Il peut en avaoir jusqu'à 2.      
     def get_ally(self):
-        print("ally gain")
         gui = self.get_gui()
         (posX, posY) = self.pos
-        print(self.__ally)
         if len(self.__ally) == 0 and len(self.__ally) != 1 :
             self.__ally.append(vaisseau(gui, "orange", posX, posY, "ally")) #Rajoute l'alié à l'attribut liste d'allié
             self.__ally[0].sprite = "images/Ally_Ship.png"
             self.__ally[0].follow((-1, self)) #Assure que l'allié suit le joueur
+        #Si on a déjà un alié, on en rajoute un deuxième
         elif len(self.__ally) == 1 and len(self.__ally) < 2:
-            #ally = vaisseau(canevas, "orange", posX +40, posY, "ally")
-            self.__ally.append(vaisseau(gui, "orange", posX, posY, "ally")) #Rajoute l'alié à l'attribut liste d'allié
+            self.__ally.append(vaisseau(gui, "orange", posX, posY, "ally"))
             self.__ally[1].sprite = "images/Ally_Ship.png"
-            self.__ally[1].follow((1, self)) #Assure que l'allié suit le joueur
+            self.__ally[1].follow((1, self))
+        #Si on a déjà 2 aliés, rien ne se passe
             
+    #Cette fonction représente le mouvement du joueur. Elle prend en argument la touche sur laquelle l'utilisateur appuye
     def mvmtP(self,event):
         (self.__posX, self.__posY) = self.pos
         gui = self.get_gui()
         canevas = gui.get_canevas()
+        #Si l'on appuye sur la flèche droite, on va a droite
         if event.keysym == 'Right':
             if self.__posX < 900:
                 self.__posX += 20
                 self.pos = (self.__posX, self.__posY)
                 canevas.move("player", +20, 0)
+        #Si l'on appuye sur la flèche droite, on va a gauche
         if event.keysym == 'Left':
             if self.__posX > 40:
                 self.__posX -= 20
                 self.pos = (self.__posX, self.__posY)
                 canevas.move("player", -20, 0)
-                #canevas.coords(self.__rectangle , self.__posX -20, self.__posY -20, self.__posX +20, self.__posY +20)
+        #Si l'on appuye sur la barre d'espace, on va a tir !
         if event.keysym == 'space':
             if self.__can_shoot == True:
                 bullet = projectile(gui, self.__posX, self.__posY, 0, 'green', self.__entities)
@@ -75,8 +79,10 @@ class joueur(vaisseau):
                         (posX_ally, posY_ally) = a.pos
                         ally_bullet = projectile(gui, a.pos[0], a.pos[1], 0, 'Orange', self.__entities)
                         ally_bullet.friendlyroutine()
+                #Pour éviter de pouvoir tirer en boucle, on rajoute une variable qui fait office de timer
                 self.__can_shoot = False
                 canevas.after(500, self.timer)
-            
+    
+    #Au bout de 0,5 secondes, on peut de nouveau tirer 
     def timer(self):
         self.__can_shoot = True

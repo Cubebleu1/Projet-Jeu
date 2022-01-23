@@ -12,9 +12,6 @@ TO DO LIST :
 from tkinter import Tk
 import gui as guint
 
-
- 
-
 ma_fenetre = Tk()
 ma_fenetre.title('Space  Invaders') 
 

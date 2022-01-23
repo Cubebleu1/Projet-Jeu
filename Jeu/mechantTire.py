@@ -19,6 +19,8 @@ class mechantTire(vaisseau):
         self.__type = "shooting"
         self.__projectileC = gui.get_canevas()
         self.__entities = entities
+        
+    #Cet alien peut tirer : il crée un objet de la classe projectile à sa position, seulement si il est toujours vivant
     def shoot(self):
         if self.is_alive == True :
             bullet = projectile(self._vaisseau__gui, self._vaisseau__posX, self._vaisseau__posY, 0, 'yellow', self.__entities)

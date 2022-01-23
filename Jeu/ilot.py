@@ -27,7 +27,7 @@ class ilot:
         self.__sprites = deque(["BlockStone/frame03.png", "BlockStone/frame02.png","BlockStone/frame01.png"])
         self.__rectangle = self.__canevas.create_rectangle(self.__posX-100, self.__posY-24, self.__posX+100, self.__posY+24, tags="protec", width ='1', outline ="grey", fill="grey")
         
-
+    # --- Si besoin, ces fonctions permettent de récuperer/modifier les stats de la protection ---
     def get_stat(self):
         return(self.__pv)
     def set_stat(self, pv):
@@ -36,6 +36,7 @@ class ilot:
         del self.__pv
     stats = property(get_stat, set_stat, del_stat, 'Stat property')
     
+    # --- Si besoin, ces fonctions permettent de récuperer/modifier la position de la protection ---
     def get_pos(self):
         return ([self.__posX, self.__posY])
     def set_pos(self, pos):
@@ -45,6 +46,8 @@ class ilot:
         del self.__posY
     pos = property(get_pos, set_pos, del_pos, 'Position Property')
     
+    #Chaque sprite de la protection est mit dans une FILE, et dès que la protection subie 4 dégats, son affichage est actualisé 
+    #en sortant un sprite de la FILE.
     def sprites(self):
         self.__pv -= 1
         if self.__pv == 12 or self.__pv==8 or self.__pv==4:
@@ -52,6 +55,7 @@ class ilot:
             self.__canevas.delete(self.__rectangle)
             self.__sprite = ImageTk.PhotoImage((Image.open(new_sprite)).resize((200,48), Image.ANTIALIAS))
             self.__display = self.__canevas.create_image(self.__posX -100,self.__posY-24, anchor=tk.NW, tag="protec", image=self.__sprite)
+        #Si la protection n'a plus de point de vie, elle est éffacée
         if self.__pv == 0:
             self.__canevas.delete(self.__display)
             self.__entities[2].remove(self)

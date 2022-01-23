@@ -6,6 +6,7 @@ super bonus : le joueur gagne un alié le temps du niveau
 
 TO DO LIST :
     - Implémenter d'autres formes de supers bonus : invinsibilité temporaire (quelques secondes), tir en rafale, ....
+    - Avoir plus d'un seul bonus par niveaux
     
 @author: Raphaël CAUDRON & Arthur JEZEQUEL
 """

@@ -42,7 +42,7 @@ class vaisseau : ### ON PEUT VIRER COULEUR NON ?###
         #sans lambda, la fonction follow est éxécutée en boucle sans fin et sans temporalisation (le .after n'a aucun effet)
 
     
-    # --- Properties --- #
+    # --- Si besoin, ces fonctions permettent de récuperer/modifier la position du vaisseau
     def get_pos(self):
         return ([self.__posX, self.__posY])
     def set_pos(self, pos):
@@ -52,6 +52,7 @@ class vaisseau : ### ON PEUT VIRER COULEUR NON ?###
         del self.__posY
     pos = property(get_pos, set_pos, del_pos, 'Position Property')
     
+    # --- Si besoin, ces fonctions permettent de récuperer/modifier le sprite du vaisseau
     def set_sprite(self, sprite_localisation):
         self.__canevas.delete(self.__display)
         self.__sprite = ImageTk.PhotoImage((Image.open(sprite_localisation)).resize((40,40), Image.ANTIALIAS))
@@ -62,16 +63,18 @@ class vaisseau : ### ON PEUT VIRER COULEUR NON ?###
         del self.__display
     sprite = property(get_sprite, set_sprite, del_sprite, 'Sprite Property')
     
+    # --- Si besoin, cette fonction permet de récuper l'objet interface utilisateur du jeu
     def get_gui(self):
         return(self.__gui)
     
+    # --- Si besoin, ces fonctions permettent de récuperer/modifier les stats du vaisseau
     def get_stats(self):
         return([self.__pv, self.__dmg, self.__points])
     def set_stats(self, new_stats):
         (self.__pv, self.__dmg, self.__points) = new_stats
     stats = property(get_stats, set_stats, None, 'Stats Property')
         
-    
+    # --- Si besoin, ces fonctions permettent de récuperer/modifier l'état (mort ou non) du vaisseau
     def get_alive(self):
         return(self.__alive)
     def set_alive(self, Bool):

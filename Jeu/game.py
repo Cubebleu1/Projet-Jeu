@@ -136,7 +136,7 @@ class game :
     #Cette fonction permet de créer les enemis de manière aléatoire au début des niveaux 
     def create_enemies(self):
         enemies = []
-        L = []
+        L = [] #L est la pile qui contiendra les informations sur les enemis générés aléatoirement
         nbLignes = self.__number_of_enemies//self.__enemies_per_line #nombre de lignes
         for l in range(nbLignes):
             for k in range(self.__enemies_per_line):
@@ -158,8 +158,7 @@ class game :
             #canevas.after(100, ligne[k].behavior)
         return(enemies)
 
-
-    
+    #Cette fonction réinitialise le jeu : toute entité est éffacée, et le niveau retourne à 0 
     def restart(self):
         self.__gameover = True
         self.__canevas.delete("enemy")
@@ -171,8 +170,11 @@ class game :
         self.__enemies=[]
         self.__protections=[]
         self.__boss=[]
+        self.__player._vaisseau__ally=[]
+        self.__canevas.delete("ally")
         self.__canevas.delete("projo")
         self.__canevas.delete("text")
+        self.__canevas.delete("protec")
         self.__canevas.delete("player")
         self.__canevas.delete("boss")
         self.__canevas.delete("bonus")
