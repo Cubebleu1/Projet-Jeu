@@ -293,6 +293,7 @@ class game :
                 e.is_alive = False
             self.__canevas.delete("enemy")
             self.__canevas.delete("projo")
+            self.__canevas.delete("bonus")
             self.__canevas.delete("text")
             self.__canevas.delete("protec")
             self.__canevas.delete(self.__player.sprite)
