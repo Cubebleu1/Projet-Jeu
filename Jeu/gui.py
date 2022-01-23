@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan 14 15:08:28 2022
+Cette classe est celle de l'interface utilisateur (UI), et on y retrouve tout les procédés qui créent les
+boutons et le canevas. On y a aussi les labels qui permettent l'affichage dynamique du score et des vies restantes
 
-@author: rapha
+TO DO LIST:
+    - Faire en sorte que le menu Mode servent à changer la difficulté (facile = 3 vies, diffcile = 1 vie)
+    - Faire en sorte que le menu Option fonctionne (Key bindings et mode plein écran)
+    
+@author: Raphaël CAUDRON & Arthur JEZEQUEL
 """
 import tkinter as tk
 from PIL import ImageTk,Image

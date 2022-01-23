@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan 14 15:08:31 2022
+Cette classe est celle des protections qui apparaissent à chaque niveau. Elles se brisent à chaque fois qu'elles subissent
+4 dégats, jusqu'à ce briser. Il n'y a aucun moyen de les récupérer avant le niveau suivant.
 
-@author: rapha
+TO DO LIST :
+    - Les rendre plus jolies...
+    
+@author: Raphaël CAUDRON & Arthur JEZEQUEL
 """
 from collections import deque
 import tkinter as tk

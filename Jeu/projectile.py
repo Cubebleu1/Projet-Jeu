@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan 14 15:08:31 2022
+Cette classe est celle des projectiles. On y retrouve toutes les fonctions qui permettent de détecter les colisions et donc
+d'assurer la destruction des enemis, des protections ou du joueur.
 
-@author: rapha
+TO DO LIST :
+    - Les projectiles ne sont ici que des rectangles qui tombent de haut en bas, mais pourquoi ne pas envisager des projectiles
+    qui descendent en diagonale (avec une ligne) ? 
+    
+@author: Raphaël CAUDRON & Arthur JEZEQUEL
+
 """
 
 class projectile :

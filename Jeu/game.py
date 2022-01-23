@@ -1,8 +1,20 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan 14 15:05:31 2022
+Cette classe est celle du jeu dans sa globalité : on y retrouve la gestion des entités, de leur création et de leur mouvement,
+mais aussi toutes les fonctions qui permettent au jeu de fonctionement convenablement : gestion des niveaux, des conditions de victoire
+ou d'echec.
 
-@author: rapha
+TO DO LIST :
+    - Optimiser tout cela !!
+    - Implémenter plusieurs modes de jeu ou de difficulté
+    - Plus de niveaux
+    - Un semblant de trame scénaristique
+    - Ca pourrait être super sympa d'avoir un fond différent à chaque niveau ! 
+    - Plus d'animations ! (explosions, ect...)
+    - DE LA MUSIQUE.
+
+@author: Raphaël CAUDRON & Arthur JEZEQUEL
 """
 from random import choices
 import tkinter as tk
@@ -153,10 +165,17 @@ class game :
         self.__canevas.delete("enemy")
         for e in self.__enemies:
             e.is_alive = False
+        for e in self.__boss:
+            e.is_alive = False
+        self.__bonus=[]
+        self.__enemies=[]
+        self.__protections=[]
+        self.__boss=[]
         self.__canevas.delete("projo")
         self.__canevas.delete("text")
         self.__canevas.delete("player")
         self.__canevas.delete("boss")
+        self.__canevas.delete("bonus")
         self.__level = 0
         self.__gui.set_score(0)
         self.__gui.set_lives(3)
@@ -245,6 +264,8 @@ class game :
             else :
                 self.__canevas.after(50, self.check_victory)
         elif self.__enemies == []:
+            self.__bonus = []
+            self.__protections = []
             self.__player.is_alive = False
             self.__canevas.delete("ally")
             self.__canevas.delete("protec")
@@ -260,8 +281,7 @@ class game :
             
     #Cette fonction vérifie les conditions de défaite(les pv du joueur sont à 0) tout le long du jeu !
     def check_defeat(self):
-        #for enemy in self.__enemies :
-        if self.__player.stats[0] == 0 : #or enemy.pos[1] > 600 : #or ((enemy.pos[1] < self.__player.pos[1] + 20 and enemy.pos[1] > self.__player.pos[1] - 20) and (enemy.pos[0] > self.__player.pos[0] - 20 and enemy.pos[0] < self.__player.pos[0] + 20)) :
+        if self.__player.stats[0] == 0 :
             self.__player.is_alive = False
             for e in self.__enemies:
                 e.is_alive = False

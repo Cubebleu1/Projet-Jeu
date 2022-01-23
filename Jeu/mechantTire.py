@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan 14 15:08:30 2022
+Classe d'un alien qui peut tirer comme le joueur et le blesser
 
-@author: rapha et arthu
+TO DO LIST :
+    - Peut être rajouter une forme de capacité spéciale à cet alien, le rendant plus agressif et diversifiant l'expérience de jeu
+    
+@author: Raphaël CAUDRON & Arthur JEZEQUEL
 """
 from vaisseau import vaisseau
 from random import randint

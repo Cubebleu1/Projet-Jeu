@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan 14 15:08:30 2022
+Classe du boss final ! Il a beaucoup de vie, et est statique. Il devait normalement faire apparaître des enemis aléatoires, 
+mais par manque de temps cette fonctionnalité à été perdue.
 
-@author: rapha
+TO DO LIST :
+    - Plus de capacités : faire apparaître des énemis, différents tirs, ect...
+
+@author: Raphaël CAUDRON & Arthur JEZEQUEL
 """
 import tkinter as tk
 from PIL import ImageTk, Image

@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan 14 15:08:30 2022
+Classe du vaisseau controllé par le joueur. On y retrouve des fonctions de déplacement rudimentaires (gauche/droite) et un tir
+Le vaisseau devait normalement se déplacer en hauteur aussi, mais la fonction qui vérifiait si le vaisseau joueur entrait en
+colision avec un des aliens n'a pas eut le temps d'être débuggée.
 
-@author: rapha
+TO DO LIST :
+    - Faire en sorte que le joueur puisse se déplacer en hauter aussi (+ conditions de défaite qui en découlent)
+    - Possibilité d'esquiver rapidement une fois toutes les 5 secondes ? 
+    
+@author: Raphaël CAUDRON & Arthur JEZEQUEL
 """
 from vaisseau import vaisseau
 from projectile import projectile

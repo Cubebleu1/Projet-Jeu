@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Jan 14 15:08:30 2022
+Classe qui régit les attributs communs des différentes entités dynamiques (méchant, joueur, boss, bonus) du jeu.
 
-@author: rapha
+TO DO LIST :
+    - Utiliser l'attribut couleur pour quelque chose : tirs de couleurs personalisés, ect...
+
+@author: Raphaël CAUDRON & Arthur JEZEQUEL
 """
 import tkinter as tk
 from PIL import ImageTk, Image
