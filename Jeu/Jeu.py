@@ -5,7 +5,7 @@ Created on Mon Dec 13 13:42:18 2021
 Page qui permet de lancer le jeu, tout simplement !
 
 TO DO LIST :
-    - Pas grand chose en soi, cette page n'est vraiment que là pour initier la création de l'interface utilisateur
+    - Pas grand chose en soi, ce script n'est vraiment que là pour initier la création de l'interface utilisateur
     
 @author: Raphaël CAUDRON & Arthur JEZEQUEL
 """

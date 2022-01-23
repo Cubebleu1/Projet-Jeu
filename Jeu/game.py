@@ -17,16 +17,13 @@ TO DO LIST :
 @author: Raphaël CAUDRON & Arthur JEZEQUEL
 """
 from random import choices
-import tkinter as tk
-from PIL import Image, ImageTk
 from joueur import joueur
 from ilot import ilot
 from mechantTire import mechantTire
 from mechant import mechant
 from bonusMechant import bonusMechant
 from final_boss import final_boss
-from bonusJeu import bonusJeu
-#joueur ilot mechantTire bonusMechant mechant final_boss 
+from bonusJeu import bonusJeu 
 
 class game :
     def __init__(self, gui):
@@ -45,8 +42,7 @@ class game :
         self.__gui = gui
         self.__canevas = gui.get_canevas()
         
-    # --- Game Properties --- #
-        
+    # --- Si besoin, ces fonctions permettent de récuperer/modifier les entités dynamiques du jeu     
     def get_entities(self):
         return([self.__player, self.__enemies, self.__protections, self.__bonus, self.__boss])
     def set_entities(self, entities):
@@ -58,7 +54,8 @@ class game :
         del self.__bonus
         del self.__boss
     entities = property(get_entities, set_entities, del_entities, 'Entities Property')
-           
+   
+    # --- Si besoin, ces fonctions permettent de récuperer/modifier l'état du jeu (en cours ou non, niveau, mode)      
     def get_game_state(self):
         return([self.__gameover, self.__reverse, self.__level, self.__mode])
     def set_game_state(self, new_state):
@@ -70,6 +67,7 @@ class game :
         del self.__mode
     game_state = property(get_game_state, set_game_state, del_game_state, 'Game Property')
         
+    # --- Si besoin, ces fonctions permettent de récuperer/modifier l'état du niveau et de ses enemis
     def get_level_state(self):
         return([self.__enemies_cara, self.__enemies_per_line, self.__number_of_enemies])
     def set_level_state(self, new_state):
@@ -79,8 +77,7 @@ class game :
         del self.__number_of_enemies
         del self.__enemies_cara
     level_state = property(get_level_state, set_level_state, del_level_state, 'Level Property')
-
-    # --- Fonctions de déroulement du jeu --- #  
+ 
     
     #Cette fonction initie le début du jeu
     def game_begin(self):
@@ -146,6 +143,7 @@ class game :
         target = self.__player
         for k in range(self.__number_of_enemies):
             caraAlien=L.pop()
+            #En fonction du type d'alien, on crée des objets de classes différentes
             if caraAlien[5] == 0:
                 enemies.append(mechant(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4]))
                 enemies[k].set_sprite("images/AlienVert.png")
@@ -183,11 +181,12 @@ class game :
         self.__gui.set_lives(3)
         self.__canevas.after(400, self.game_begin)
         
+    #Cette fonction active la fonction comportementale (behavior) de chaque entité dynamique, mais inite aussi les fonctions
+    #qui vérifient l'état du jeu (echec ou victoire)
     def whole_behavioral(self):
-        print("behavioral started")
-        self.clockmove()
-        self.check_victory()
-        self.check_defeat()
+        self.clockmove() #mouvement des ennemis
+        self.check_victory() #Vérification continue de si le joueur a gagné...
+        self.check_defeat() #... ou perdu
         for m in self.__enemies:
             m.behavior()
         for m in self.__boss:
@@ -195,7 +194,6 @@ class game :
         for m in self.__bonus:
             m.behavior()
 
-    # --- Fonctions de mouvement des entités --- #
     
     #Fonctions qui permet aux enemis de base de se déplacer de manière synchronisée et "retro"
     def clockmove(self):
@@ -213,17 +211,16 @@ class game :
                     elif self.__reverse == True:
                         #posX -= 10
                         alien.pos = (posX-10, posY)                            
-                #On déplace tous les sprites des enemies de manière synchronisée
+                #On déplace tous les sprites des ennemis de manière synchronisée
                 if not self.__reverse:
                     self.__canevas.move("enemy", 10, 0)
                 elif self.__reverse :
                     self.__canevas.move("enemy", -10, 0)
             self.__canevas.after(200, self.clockmove)
-            #sans lambda, la fonction clockmove est éxécutée en boucle sans fin et sans temporalisation (le .after n'a aucun effet)
         elif self.__gameover == True : 
             return(None)
         
-    #Cette fonction permet aux enemis de sauter une ligne et donc d'avancer vers le joueur
+    #Cette fonction permet aux ennemis de sauter une ligne et donc d'avancer vers le joueur
     def jump(self, dir):
         self.__canevas.move("enemy", dir*40, 40)
         for m in self.__enemies:
@@ -238,9 +235,12 @@ class game :
     def check_limit(self):
         for m in self.__enemies:
             (posX, posY) = m.pos
+            #Si les enemis sont trop proches du joueur, on considére qu'il a perdu : ses points de vie atteignent 0
             if posY >= 580:
                 self.__player.stats = (0,0, 0)
                 return(False)
+            #En fonction de si les enemis touchent le bord droit ou gauche du canevas, on modifie la valeur de reverse
+            #qui défini si les enemis vont à droite ou à gauche dans clockmove
             elif posX > 900:
                 self.__reverse = not self.__reverse 
                 self.jump(-1)
@@ -254,6 +254,7 @@ class game :
     def check_victory(self):
         if self.__gameover == True :
             return(None)
+        #Les conditions de victoire du niveau 3 sont spéciales : il faut avoir vaincu le boss
         elif self.__level == 3:
             if self.__boss==[] and self.__enemies == []:
                 self.__gameover = True
@@ -265,7 +266,9 @@ class game :
                 return(None)
             else :
                 self.__canevas.after(50, self.check_victory)
+        #Dans les niveaux 0 à 2, si les ennemis sont tous vaincus, alors le joueur gagne et on passe au niveau suivant.
         elif self.__enemies == []:
+            #On pense bien à reinitialiser l'état du jeu avant de passer au niveau suivant,et effacer toutes les entitiés du niveau précédent
             self.__bonus = []
             self.__protections = []
             self.__player.is_alive = False
@@ -284,6 +287,7 @@ class game :
     #Cette fonction vérifie les conditions de défaite(les pv du joueur sont à 0) tout le long du jeu !
     def check_defeat(self):
         if self.__player.stats[0] == 0 :
+            #Si le joueur a perdu, tout est reinitialisé, les entités sont éffacés et il faut appuyer sur recommencer
             self.__player.is_alive = False
             for e in self.__enemies:
                 e.is_alive = False

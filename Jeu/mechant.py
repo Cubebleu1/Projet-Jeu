@@ -16,4 +16,5 @@ class mechant(vaisseau):
         self.stats = (1, 1, 10)
         
     def behavior(self):
+        #Cet ennemi n'a pas de comportement, il ne fait que se déplacer.
         pass

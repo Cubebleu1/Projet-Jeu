@@ -16,6 +16,7 @@ from game import game
 
 class GUI:
     def __init__(self, fenetre):
+        #Création de l'interface grâce à TKinter
         self.__fenetre = fenetre
         self.__menu_main = tk.Menu(self.__fenetre)
         
@@ -63,10 +64,10 @@ class GUI:
         
         self.__fenetre.mainloop()
         
+    # --- Si besoin, ces fonctions permettent de récuperer/modifier le score ou le nombre de vie
     def set_score(self, new_score):
         self.__score.set("Score : " + str(new_score))
-        self.__score_int = new_score
-        
+        self.__score_int = new_score   
     def get_score(self):
         return(self.__score_int)
     def set_lives(self, new_lives):

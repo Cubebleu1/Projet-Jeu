@@ -44,10 +44,11 @@ class bonusJeu(vaisseau):
     
     #Cette fonction inite le comportement du bonus après qu'il soit apparu
     def appear(self):
-        self._vaisseau__posY = 200
-        self.__sprite = ImageTk.PhotoImage((Image.open("images/PinkAlien.png")).resize((40,40), Image.ANTIALIAS))
-        self.__display = self.__canevas.create_image(self._vaisseau__posX -20,self._vaisseau__posY-20, anchor=tk.NW, image=self.__sprite, tag = "bonus")
-        self.move()
+        if self.is_alive == True:
+            self._vaisseau__posY = 200
+            self.__sprite = ImageTk.PhotoImage((Image.open("images/PinkAlien.png")).resize((40,40), Image.ANTIALIAS))
+            self.__display = self.__canevas.create_image(self._vaisseau__posX -20,self._vaisseau__posY-20, anchor=tk.NW, image=self.__sprite, tag = "bonus")
+            self.move()
         
     #le bonus ne devrait pas apparaître tout de suite, cette fonction permet de "retarder" son apparition sur le canevas        
     def behavior(self):
