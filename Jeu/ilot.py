@@ -12,7 +12,7 @@ from PIL import ImageTk, Image
 class ilot:
     def __init__(self, gui, game, entities, posX, posY):
         self.__img="obstacle2"
-        self.__pv=100
+        self.__pv=16
         self.__gui = gui
         self.__game = game
         self.__canevas = gui.get_canevas()

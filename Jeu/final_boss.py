@@ -9,6 +9,7 @@ from PIL import ImageTk, Image
 from vaisseau import vaisseau
 from mechantTire import mechantTire
 from projectile import projectile
+from random import randint
 
 #Classe du boss final, très dur a vaincre :(      
 class final_boss(vaisseau):
@@ -18,20 +19,15 @@ class final_boss(vaisseau):
         self.__canevas = gui.get_canevas()
         self.stats = (40, 2, 5000)
         self.__entities=entities
-        self.__player = entities[0]
+        self._vaisseau__type="boss"
         self.__posX = self.pos[0]
         self.__posY = self.pos[1]
     
     def final_boss_sprite(self):
         self.__canevas.delete(self.get_sprite())
         self.__sprite = ImageTk.PhotoImage((Image.open("BossGalaga.png")).resize((200,200), Image.ANTIALIAS))
-        self.__display = self.__canevas.create_image(self.__posX -20,self.__posY-20, anchor=tk.CENTER, tag="Boss", image=self.__sprite)
-    
-    def spawn_minions(self):
-        print('ye')
-        minion = mechantTire(self.__gui, 'red', 100, 40, "enemy", self.__player )
-        minion.set_sprite("RedAlien.png")
-        self.__canevas.after(3000, self.spawn_minions)
+        self.__display = self.__canevas.create_image(self.__posX -20,self.__posY-20, anchor=tk.CENTER, tag="boss", image=self.__sprite)
+
         
     def super_shoot(self):    
         if self.is_alive == True :
@@ -39,10 +35,9 @@ class final_boss(vaisseau):
             bullet1.routine()
             bullet2 = projectile(self.__gui, self.__posX - 30, self.__posY, 2, 'orange', self.__entities )
             bullet2.routine()
-            self.__canevas.after(3000, self.super_shoot)
+            self.__canevas.after(randint(1000, 2000), self.super_shoot)
         else:
             return(None)    
         
     def behavior(self):
-        self.super_shoot()
-        self.spawn_minions()
+        self.__canevas.after(2000, self.super_shoot)

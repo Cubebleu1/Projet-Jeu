@@ -9,6 +9,7 @@ from PIL import ImageTk, Image
 
 class vaisseau : ### ON PEUT VIRER COULEUR NON ?###
     def __init__(self,gui,couleur, posX, posY, tag):
+        
         self.__alive = True
         self.__type = "None"
         self.__pv=0
@@ -29,7 +30,7 @@ class vaisseau : ### ON PEUT VIRER COULEUR NON ?###
         (self.__posX, self.__posY) = target_to_folow.pos
         #self.__posX = target_to_folow[0]
         #self.__posY = target_to_folow[1]
-        self.__canevas.coords(self.__display , self.__posX +60*direction, self.__posY -60)
+        self.__canevas.coords(self.__display , self.__posX +73*direction, self.__posY -50)
         #canevas.coords(self.__rectangle , self.__posX -20, self.__posY -20, self.__posX +20, self.__posY +20)
         self.pos = (self.__posX +60*direction, self.__posY)
         self.__canevas.after(10, lambda : self.follow(localisation))

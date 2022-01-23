@@ -9,6 +9,5 @@ from mechantTire import mechantTire
 class bonusMechant(mechantTire):
     def __init__(self, canevas, couleur, posX, posY, tag, tout):
         super().__init__(canevas, couleur, posX, posY, tag, tout)
-        self.__img="alienViolet.jpg"
+        self._vaisseau__type = "bonusmechant"
         self.stats = (4, 1, 50)
-        self.__points=150

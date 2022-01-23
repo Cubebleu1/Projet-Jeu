@@ -28,12 +28,6 @@ class joueur(vaisseau):
         del self.__entities
     entities = property(get_entities, set_entities, del_entities, 'Enemy seen from the player Property')
     
-    
-    def bonus(self,genre):
-       if genre == "pv":
-           self.__pv+=1
-       elif genre == "dmg":
-           self.__dmg+=1
            
     def get_ally(self):
         print("ally gain")
@@ -74,8 +68,8 @@ class joueur(vaisseau):
                         (posX_ally, posY_ally) = a.pos
                         ally_bullet = projectile(gui, a.pos[0], a.pos[1], 0, 'Orange', self.__entities)
                         ally_bullet.friendlyroutine()
-                self.__can_shoot = False
-                canevas.after(500, self.timer)
+                #self.__can_shoot = False
+                #canevas.after(500, self.timer)
             
     def timer(self):
         self.__can_shoot = True

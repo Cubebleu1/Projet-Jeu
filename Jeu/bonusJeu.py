@@ -14,16 +14,17 @@ class bonusJeu(vaisseau):
         super().__init__(gui, couleur, posX, posY, tag)
         self.__entities = entities
         self.stats = (1, 1, 250)
+        self._vaisseau__type="bonus"
         self.__gui = gui
         self.__canevas = self.__gui.get_canevas()
         self.__sprite = ImageTk.PhotoImage((Image.open("Bonus.png")).resize((40,40), Image.ANTIALIAS))
         self.__display = self.__canevas.create_image(self._vaisseau__posX -20,self._vaisseau__posY-20, anchor=tk.NW, image=self.__sprite, tag = "bonus")
         
     def move(self):
-        print(self._vaisseau__posX, self.pos)
+        #print(self._vaisseau__posX, self.pos)
         if self._vaisseau__posX >=920:
             self.__canevas.delete(self.__display)
-            self.__entities[1].remove(self)
+            self.__entities[3].remove(self)
             return(None)
         elif self._vaisseau__alive == False:
             self.__entities[0].get_ally()
@@ -40,4 +41,4 @@ class bonusJeu(vaisseau):
         self.move()
         
     def behavior(self):
-        self.__canevas.after(randint(1000, 4000), self.appear)
+        self.__canevas.after(randint(4000, 10000), self.appear)

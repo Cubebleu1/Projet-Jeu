@@ -12,7 +12,7 @@ class mechantTire(vaisseau):
     def __init__(self, gui,couleur, posX, posY, tag, entities):
         super().__init__(gui, couleur, posX, posY, tag)
         self.stats = (2, 1, 25)
-        #self.__tirer=True
+        self.__type = "shooting"
         self.__projectileC = gui.get_canevas()
         self.__entities = entities
     def shoot(self):

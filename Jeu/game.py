@@ -5,6 +5,8 @@ Created on Fri Jan 14 15:05:31 2022
 @author: rapha
 """
 from random import choices
+import tkinter as tk
+from PIL import Image, ImageTk
 from joueur import joueur
 from ilot import ilot
 from mechantTire import mechantTire
@@ -19,6 +21,8 @@ class game :
         self.__gameover = True
         self.__reverse = False
         self.__enemies = []
+        self.__bonus = []
+        self.__boss = []
         self.__protections = []
         self.__enemies_cara = []
         self.__level = 0
@@ -32,13 +36,15 @@ class game :
     # --- Game Properties --- #
         
     def get_entities(self):
-        return([self.__player, self.__enemies, self.__protections])
+        return([self.__player, self.__enemies, self.__protections, self.__bonus, self.__boss])
     def set_entities(self, entities):
-        (self.__player, self.__enemies, self.__protections) = entities   
+        (self.__player, self.__enemies, self.__protections, self.__bonus, self.__boss) = entities   
     def del_entities(self):
         del self.__player
         del self.__enemies
         del self.__protections
+        del self.__bonus
+        del self.__boss
     entities = property(get_entities, set_entities, del_entities, 'Entities Property')
            
     def get_game_state(self):
@@ -79,7 +85,7 @@ class game :
                 self.__enemies_per_line = 7
                 self.__number_of_enemies = 21
                 self.__enemies = self.create_enemies()
-                self.__enemies.append(bonusJeu(self.__gui, 'green', 20, -100, "bonus", self.entities))
+                self.__bonus.append(bonusJeu(self.__gui, 'green', 20, -100, "bonus", self.entities))
                 self.__protections.append(ilot(self.__gui, game, self.entities, 800, 525))
                 self.__protections.append(ilot(self.__gui, game, self.entities, 150, 525))                
                 self.__player.entities = self.entities #Mise à jour des enemis percus par le joueur
@@ -88,35 +94,35 @@ class game :
                 self.__enemies_per_line = 10
                 self.__number_of_enemies = 40
                 self.__enemies = self.create_enemies()
-                self.__enemies.append(bonusJeu(self.__gui, 'green', 20, -100, "bonus", self.entities))
+                self.__bonus.append(bonusJeu(self.__gui, 'green', 20, -100, "bonus", self.entities))
                 self.__protections.append(ilot(self.__gui, game, self.entities, 800, 525))
                 self.__protections.append(ilot(self.__gui, game, self.entities, 150, 525))
-                print(self.entities)
                 self.__player.entities = self.entities
                 self.whole_behavioral()
             elif self.__level == 2:
                 self.__enemies_per_line = 10
                 self.__number_of_enemies = 80
                 self.__enemies = self.create_enemies()
-                self.__enemies.append(bonusJeu(self.__gui, 'green', 20, -100, "bonus", self.entities))
+                self.__bonus.append(bonusJeu(self.__gui, 'green', 20, -100, "bonus", self.entities))
                 self.__protections.append(ilot(self.__gui, game, self.entities, 800, 525))
                 self.__protections.append(ilot(self.__gui, game, self.entities, 150, 525))                
                 self.__player.entities = self.entities
                 self.whole_behavioral()
             elif self.__level == 3:
-                self.__enemies.append(final_boss(self.__gui, 'pink', 475, 300, "boss", self.__entities))
-                self.__enemies[0].final_boss_sprite()
-                self.__enemies.append(bonusJeu(self.__gui, 'green', 20, -100, "bonus", self.entities))
+                self.__enemies_per_line = 10
+                self.__number_of_enemies = 40
+                self.__enemies = self.create_enemies() 
+                self.__boss.append(final_boss(self.__gui, 'osef', 470, 300, 'boss', self.entities))   
+                self.__boss[0].final_boss_sprite() 
                 self.__protections.append(ilot(self.__gui, game, self.entities, 800, 525))
-                self.__protections.append(ilot(self.__gui, game, self.entities, 150, 525))                
-                self.__player.entities = self.entities
-                self.__enemies[0].behavior()
+                self.__protections.append(ilot(self.__gui, game, self.entities, 150, 525))   
+                self.__player.entities = self.entities 
+                self.whole_behavioral()                         
         else :
             return(None)
         
     #Cette fonction permet de créer les enemis de manière aléatoire au début des niveaux 
     def create_enemies(self):
-        7 #nombre d'aliens par ligne
         enemies = []
         L = []
         nbLignes = self.__number_of_enemies//self.__enemies_per_line #nombre de lignes
@@ -137,17 +143,9 @@ class game :
             elif caraAlien[5] == 2:
                 enemies.append(bonusMechant(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4], self.entities))
                 enemies[k].set_sprite("BlackAlien.png")
-            #canevas.after(100, ligne[k].behavior) 
+            #canevas.after(100, ligne[k].behavior)
         return(enemies)
-        
-    def display_enemies(self, L):
-        target = self.__player
-        for k in range(self.__number_of_enemies):
-            caraAlien=L.pop()
-            self.__enemies.append(mechantTire(caraAlien[0],caraAlien[1],caraAlien[2],caraAlien[3], caraAlien[4], target))
- 
 
-            #canevas.after(100, ligne[k].behavior) 
 
     
     def restart(self):
@@ -171,6 +169,10 @@ class game :
         self.check_defeat()
         for m in self.__enemies:
             m.behavior()
+        for m in self.__boss:
+            m.behavior()
+        for m in self.__bonus:
+            m.behavior()
 
     # --- Fonctions de mouvement des entités --- #
     
@@ -181,15 +183,15 @@ class game :
                 pass #on vérifie que les enemis ne sont pas en dehors du canevas, si ils le sont, ils changent de sens et sautent une ligne
             else :
                 #On modifie les coordonnées des enemis pour qu'elles s'accordent au déplacement de leur sprite
-                for m in range(0, len(self.__enemies) -1):
-                    alien = self.__enemies[m]
+                for m in self.__enemies:
+                    alien = m
                     (posX, posY) = alien.pos
                     if self.__reverse == False:
-                        posX += 10
-                        alien.pos = (posX, posY)
+                        #posX += 10
+                        alien.pos = (posX +10, posY)
                     elif self.__reverse == True:
-                        posX -= 10
-                        alien.pos = (posX, posY)
+                        #posX -= 10
+                        alien.pos = (posX-10, posY)                            
                 #On déplace tous les sprites des enemies de manière synchronisée
                 if not self.__reverse:
                     self.__canevas.move("enemy", 10, 0)
@@ -198,44 +200,57 @@ class game :
             self.__canevas.after(200, self.clockmove)
             #sans lambda, la fonction clockmove est éxécutée en boucle sans fin et sans temporalisation (le .after n'a aucun effet)
         elif self.__gameover == True : 
-            print("stop")
             return(None)
         
     #Cette fonction permet aux enemis de sauter une ligne et donc d'avancer vers le joueur
     def jump(self, dir):
         self.__canevas.move("enemy", dir*40, 40)
-        for m in range(0, len(self.__enemies) -1):
+        for m in self.__enemies:
             if dir == 1:
-                (posX, posY) = self.__enemies[m].pos
-                self.__enemies[m].pos = (posX+40, posY + 40)
+                (posX, posY) = m.pos
+                m.pos = (posX+40, posY + 40)
             elif dir == -1:
-                (posX, posY) = self.__enemies[m].pos
-                self.__enemies[m].pos = (posX-40, posY + 40)
+                (posX, posY) = m.pos
+                m.pos = (posX-40, posY + 40)
 
     #C'est cette fonction qui vérifie que les ennemis ne sont pas hors du canevas
     def check_limit(self):
-        for m in range(0, len(self.__enemies) -1):
-            (posX, posY) = self.__enemies[m].pos
-            print(posX, posY)
-            if posY >= 540:
+        for m in self.__enemies:
+            (posX, posY) = m.pos
+            if posY >= 580:
                 self.__player.stats = (0,0, 0)
                 return(False)
             elif posX > 900:
                 self.__reverse = not self.__reverse 
                 self.jump(-1)
                 return(True)
-            elif posX < 60:
+            elif posX < 30:
                 self.__reverse = not self.__reverse
                 self.jump(1)
                 return(True)
     
     #Cette fonction vérifie les conditions de victoire (tous les enemis ont été vaincus) tout le long du jeu !
     def check_victory(self):
+        print(self.__boss, self.__enemies)
         if self.__gameover == True :
+            print("gameover")
             return(None)
+        elif self.__level == 3:
+            print("niveau3")
+            if self.__boss==[] and self.__enemies == []:
+                self.__gameover = True
+                self.__player.is_alive = False 
+                self.__canevas.delete(self.__player.sprite)
+                self.__canevas.delete("protec")
+                self.__canevas.delete("ally")
+                victory = self.__canevas.create_text(475,320,fill="yellow",font="Times 40 italic bold", text="CONGRATULATIONS !", tag="text")               
+                return(None)
+            else :
+                self.__canevas.after(50, self.check_victory)
         elif self.__enemies == []:
             self.__player.is_alive = False
             self.__canevas.delete("ally")
+            self.__canevas.delete("protec")
             self.__canevas.delete(self.__player.sprite)
             victory = self.__canevas.create_text(475,320,fill="yellow",font="Times 40 italic bold", text="Get ready for the next level", tag="text")
             self.__canevas.after(2000, lambda:self.__canevas.delete(victory))
@@ -251,7 +266,6 @@ class game :
         #for enemy in self.__enemies :
         if self.__player.stats[0] == 0 : #or enemy.pos[1] > 600 : #or ((enemy.pos[1] < self.__player.pos[1] + 20 and enemy.pos[1] > self.__player.pos[1] - 20) and (enemy.pos[0] > self.__player.pos[0] - 20 and enemy.pos[0] < self.__player.pos[0] + 20)) :
             self.__player.is_alive = False
-            print('dead')
             for e in self.__enemies:
                 e.is_alive = False
             self.__canevas.delete("enemy")

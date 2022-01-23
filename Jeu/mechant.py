@@ -9,7 +9,7 @@ from vaisseau import vaisseau
 class mechant(vaisseau):
     def __init__(self, gui,couleur, POSX, POSY, tag):
         super().__init__(gui, couleur, POSX, POSY, tag)
-        self.__img="alienNoir.jpg"
+        self._vaisseau__type = "normal"
         self.stats = (1, 1, 10)
         
     def behavior(self):
