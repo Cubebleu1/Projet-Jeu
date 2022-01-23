@@ -32,22 +32,27 @@ class GUI:
 
         self.__fenetre.config(menu = self.__menu_main)
         
+        #Création du canevas
         self.__background = ImageTk.PhotoImage(file = 'images/Background.png')
         self.__canevas = tk.Canvas(self.__fenetre, width = 2*470, height = 2*320, bg ='darkblue')
         self.__canevas.create_image(0,0, anchor=tk.NW, image = self.__background)
         self.__canevas.focus_set()
         self.__canevas.pack(padx = 5, pady = 5)
         
+        #Petit message de bienvenue sur le jeu
         self.__greetings = ImageTk.PhotoImage((Image.open("images/Greetings.png")).resize((750,440), Image.ANTIALIAS))
         self.__greetings_img = self.__canevas.create_image(450,300, anchor=tk.CENTER, tag="Greetings", image=self.__greetings)
         
+        #Bouton pour quitter le jeu
         self.__exit_btn = tk.Button(self.__fenetre, text = 'Quitter', command = self.__fenetre.destroy)
         self.__exit_btn.pack(side = 'left', padx = 5, pady = 5)
         
+        #Bouton pour lancer le jeu
         self.__game = game(self)
         self.__start_btn = tk.Button(self.__fenetre, text = 'Jouer', command =  self.__game.game_begin)
         self.__start_btn.pack(side = 'left', padx = 5, pady = 5)
         
+        #Bouton pour redémarer la partie
         self.__reset_btn = tk.Button(self.__fenetre, text = 'Recommencer', command = self.__game.restart)
         self.__reset_btn.pack(side = 'left', padx = 5, pady = 5)
 
